@@ -1,0 +1,63 @@
+import random
+import math
+import cmath
+import string
+
+# Helper function to generate a complex hash using the input string
+def generate_complex_hash(input_string):
+    complex_hash = 0
+    for char in input_string:
+        # Convert each character to a complex number and apply the exponential transformation
+        complex_hash += cmath.exp(complex(ord(char) * 1j))  # Exponential of the complex number
+    return complex_hash
+
+# Apply a chaotic transformation (using random floating values)
+def apply_chaos(input_value):
+    return input_value * random.uniform(1, 3) * cmath.exp(complex(random.random(), random.random()))
+
+# Function to randomly convert parts of the complex hash to characters or numbers
+def convert_to_random_characters(input_string, conversion_rate=0.3):
+    """ Randomly convert some parts of the hash to characters (based on a conversion rate). """
+    
+    # Split the input string into character parts and randomly choose parts to replace
+    new_string = []
+    for char in input_string:
+        # Random chance to convert to a character (if conversion_rate chance is met)
+        if random.random() < conversion_rate:
+            # Replace with a random character (either letter or digit)
+            random_char = random.choice(string.ascii_letters + string.digits)
+            new_string.append(random_char)
+        else:
+            # Keep the character as it is (number or part of original input)
+            new_string.append(char)
+    
+    return ''.join(new_string)
+
+# Main function to execute the hash generation
+def main():
+    # Get input from the user (interactive via input())
+    input_string = input("Enter your text to generate a complex hash: ")
+    
+    # Step 1: Generate base complex hash
+    complex_hash = generate_complex_hash(input_string)
+    
+    # Step 2: Apply chaotic transformation to the hash
+    transformed_hash = apply_chaos(complex_hash)
+
+    # Step 3: Convert parts of the hash into characters (deterministically chosen parts)
+    real_part_str = str(transformed_hash.real)  # Convert real part to string
+    imaginary_part_str = str(transformed_hash.imag)  # Convert imaginary part to string
+    
+    # Apply random character conversion
+    real_part_converted = convert_to_random_characters(real_part_str)
+    imaginary_part_converted = convert_to_random_characters(imaginary_part_str)
+    
+    # Combine the real and imaginary parts with random characters
+    final_hash = real_part_converted + '+' + imaginary_part_converted + 'j'
+
+    # Output the final transformed hash
+    print(f"Generated complex hash with mixed characters: {final_hash}")
+
+# Run the main function
+if __name__ == "__main__":
+    main()
